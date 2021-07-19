@@ -5,6 +5,7 @@ using std::cin;
 using std::endl;
 
 std::string encrypt_caesar(std::string, int);
+std::string decrypt_caesar(std::string, int);
 char getLetter(char, char, char, int);
 
 int main() {
@@ -15,14 +16,17 @@ int main() {
   std::getline(cin, str);
   cout << "Введите значение сдвига: ";
   cin >> shift;
-  cout << endl << encrypt_caesar(str, shift) << endl;
+
+  shift -= shift / 26 * 26; // избавляемся от циклов сдвига
+  std::string encStr = encrypt_caesar(str, shift);
+  cout << endl << encStr << endl;
+  cout << endl << decrypt_caesar(encStr, shift) << endl;
   cout << endl;
 
   return 0;
 }
 
 std::string encrypt_caesar(std::string str, int shift) {
-  shift -= shift / 26 * 26; // избавляемся от циклов сдвига
   for (size_t i = 0; i < str.length(); i++) {
     if (std::isupper(static_cast<int>(str[i]))) { // прописная буква
       str[i] = getLetter(str[i], 'A', 'Z', shift);
@@ -53,5 +57,9 @@ char getLetter(char letter ,char borderDown, char borderUp, int shift) {
     }
 
   return letter;
+}
+
+std::string decrypt_caesar(std::string str, int shift) {
+    return encrypt_caesar(str, -shift);
 }
 
