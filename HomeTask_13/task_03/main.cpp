@@ -5,25 +5,26 @@ using std::cout;
 using std::cin;
 using std::endl;
 
+constexpr int SIZE {20};
 void printDB(const std::vector<int> &);
 
 int main() {
   cout << "Задача 3. " << endl;
   cout << "Введите значения в базу данных (-1 выход) " << endl << endl;
 
-  std::vector<int> vecDB;
-  vecDB.reserve(20);
-  int x = 0;
-  do {
-    cin >> x;
-    if (x != -1) {
-      if (vecDB.size() == vecDB.capacity()) { vecDB.erase(vecDB.begin()); }
-      vecDB.push_back(x);
+  std::vector<int> vecDB(SIZE);
+  int data = 0;
+  size_t i = 0;
+  do { // кольцевая запись
+    cin >> data;
+    if (data != -1) {
+      if (i == SIZE) { i = 0; }
+      vecDB[i] = data;
+      i++;
     }
-  } while(x != -1);
+  } while(data != -1);
   cout << "vector: ";
   printDB(vecDB);
-  cout << endl << endl;
 
   return 0;
 }
@@ -32,5 +33,6 @@ void printDB(const std::vector<int> &vecDB) {
   for (auto &i : vecDB) {
     cout << i << " ";
   }
+  cout << endl;
 }
 
