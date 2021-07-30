@@ -11,9 +11,10 @@ int main() {
   vector<size_t> purchases {1, 1, 0, 3};
 
   float sum = 0.0f;
-  for (size_t i = 0; i < purchases.size(); i++) {
-    sum += prices[purchases[i]];
+  for (auto i : purchases) {
+    sum += prices[i];
   }
+
   cout << "sum = " << sum << endl << endl;
 
   return 0;
