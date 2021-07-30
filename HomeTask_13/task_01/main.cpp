@@ -6,6 +6,8 @@ using std::cin;
 using std::endl;
 using std::vector;
 
+vector<int> cleaning(vector<int> &, int);
+
 int main() {
   cout << "Задача 1. " << endl << endl;
   cout << "Введите кол. элементов: ";
@@ -16,28 +18,33 @@ int main() {
     cout << endl << "теперь сами элементы" << endl;
     vector<int> vec(size); // создаём вектор
     for (size_t i {0} ; i < size; i++) {
-      cin >> vec[i]; // пользователь заполняет вектор
+      cin >> vec[i];
     }
-
     cout << endl << "введите значение которого не должно быть в векторе: ";
     int num {0};
     cin >> num;
-    vector<int>::iterator i {vec.begin()};
-    while (i != vec.end()) {
-      if (*i == num) { vec.erase(i); }
-      else { i++; }
-    }
+    vec = cleaning(vec, num); // отмыли
 
     cout << "в результате вектор: ";
-    for (size_t i {0} ; i < vec.size(); i++) {
-      cout << " " << vec[i]; // выводим вектор
+    for (auto i : vec) {
+      cout << " " << i;
     }
   } else {
     cout << endl << "Введено неверное кол. элементов";
   }
-
   cout << endl << endl;
 
   return 0;
+}
+
+// Очищает вектор от ненужных значений
+// vec - вектор, который нужно очистить
+// num - от чего нужно очистить
+vector<int> cleaning(vector<int> &vec, int num) {
+  vector<int> newVec;
+  for (auto &i : vec) {
+    if (i != num) { newVec.push_back(i); }
+  }
+  return newVec;
 }
 
