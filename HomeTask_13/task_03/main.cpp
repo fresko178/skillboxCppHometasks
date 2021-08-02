@@ -4,41 +4,39 @@
 using std::cout;
 using std::cin;
 using std::endl;
+using std::vector;
 
-constexpr int SIZE {20};
-void printDB(const std::vector<int> &, size_t);
+void cleaning(vector<int> &, int);
 
 int main() {
-  cout << "Задача 3. " << endl;
-  cout << "Введите значения в базу данных (-1 выход) " << endl << endl;
+  cout << "Задача 1. " << endl << endl;
+  cout << "Введите кол. элементов: ";
+  size_t size {0};
+  cin >> size;
 
-  std::vector<int> vecDB(SIZE);
-  int data = 0;
-  size_t i = 0;
-  do { // кольцевая запись
-    cin >> data;
-    if (data != -1) {
-      if (i == SIZE) { i = 0; }
-      vecDB[i] = data;
-      i++;
+  if (size > 0) {
+    cout << endl << "теперь сами элементы" << endl;
+    vector<int> vec(size); // создаём вектор
+    for (size_t i {0} ; i < size; i++) {
+      cin >> vec[i];
     }
-  } while(data != -1);
-  cout << "vector: ";
-  cout << endl;
-  printDB(vecDB, i);
+    cout << endl << "введите значение которого не должно быть в векторе: ";
+    int num {0};
+    cin >> num;
+
+    for (auto i = vec.begin(); i != vec.end(); ) {
+        if (*i == num) { i = vec.erase(i); }
+        else { i++; }
+    }
+    cout << "в результате вектор: ";
+    for (auto i : vec) {
+      cout << " " << i;
+    }
+  } else {
+    cout << endl << "Введено неверное кол. элементов";
+  }
+  cout << endl << endl;
 
   return 0;
-}
-
-// &vecDB - выводимый вектор
-// index - самый старый элемент
-void printDB(const std::vector<int> &vecDB, size_t index) {
-  for (size_t j = index ; j < SIZE; j++) { // выводим начиная со старого элемента
-    cout << vecDB[j] << " ";
-  }
-  for (size_t j = 0; j < index; j++) { // выводим всё до старого элемента
-    cout << vecDB[j] << " ";
-  }
-  cout << endl;
 }
 
