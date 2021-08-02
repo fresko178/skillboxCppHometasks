@@ -6,7 +6,7 @@ using std::cin;
 using std::endl;
 
 constexpr int SIZE {20};
-void printDB(const std::vector<int> &);
+void printDB(const std::vector<int> &, size_t);
 
 int main() {
   cout << "Задача 3. " << endl;
@@ -24,14 +24,20 @@ int main() {
     }
   } while(data != -1);
   cout << "vector: ";
-  printDB(vecDB);
+  cout << endl;
+  printDB(vecDB, i);
 
   return 0;
 }
 
-void printDB(const std::vector<int> &vecDB) {
-  for (auto &i : vecDB) {
-    cout << i << " ";
+// &vecDB - выводимый вектор
+// index - самый старый элемент
+void printDB(const std::vector<int> &vecDB, size_t index) {
+  for (size_t j = index ; j < SIZE; j++) { // выводим начиная со старого элемента
+    cout << vecDB[j] << " ";
+  }
+  for (size_t j = 0; j < index; j++) { // выводим всё до старого элемента
+    cout << vecDB[j] << " ";
   }
   cout << endl;
 }
