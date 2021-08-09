@@ -47,12 +47,12 @@ void setMap(Map &map) {
 }
 
 size_t getHeightBlock(size_t a, size_t b) {
-  size_t heightBlock {HEIGHT + 1};
-  while (HEIGHT + 1 == heightBlock) {
+  size_t heightBlock {SIZE_MAX};
+  while (SIZE_MAX == heightBlock) {
     cout << "Введите высоту блока [" << a << "][" << b << "] = ";
     cin >> heightBlock;
     if (heightBlock > HEIGHT) {
-      heightBlock = HEIGHT + 1;
+      heightBlock = SIZE_MAX;
       cout << "[ERROR] Введено некорректное значение высоты блока" << endl;
     }
   }
