@@ -5,24 +5,25 @@ using std::cout;
 using std::cin;
 using std::endl;
 using std::vector;
+using Map = vector<vector<vector<bool>>>;
 
-constexpr int length {5};
-constexpr int width  {5};
-constexpr int height {10};
+constexpr int LENGTH {5};
+constexpr int WIDTH  {5};
+constexpr int HEIGHT {10};
 
-void setMap(vector<vector<vector<bool>>> &);
-size_t getSize(size_t, size_t);
-void showSlice(vector<vector<vector<bool>>> &, size_t);
+void setMap(Map &);
+size_t getHeightBlock(size_t, size_t);
+void showSlice(Map &, size_t);
 
 int main() {
   cout << "Задача 8. Почти-Майнкрафт" << endl;
-  vector<vector<vector<bool>>> map(length, vector<vector<bool>>(width, vector<bool>(height, false)));
-  setMap(map);
+  Map map(LENGTH, vector<vector<bool>>(WIDTH, vector<bool>(HEIGHT, false))); // наш куб
+  setMap(map); // устанавливаем в true ячейки столбцов, кроме ячеек превышающих значение высоты
   int level = -1;
   while (-1 == level) {
     cout << "Введите номер уровня среза (0-9): ";
     cin >> level;
-    if (level < 0 || level > height - 1) {
+    if (level < 0 || level > HEIGHT - 1) {
       level = -1;
       cout << "[ERROR] Введён несуществующий уровень, повторите попытку" << endl;
     }
@@ -33,34 +34,34 @@ int main() {
   return 0;
 }
 
-void setMap(vector<vector<vector<bool>>> & map) {
-  for (size_t a = 0; a < length; a++) {
-    for (size_t b = 0; b < width; b++) {
-      size_t size = getSize(a, b);
-      for (size_t c = 0; c < size; c++) {
-        map[a][b][c] = true;
+void setMap(Map &map) {
+  for (size_t a = 0; a < LENGTH; a++) {
+    for (size_t b = 0; b < WIDTH; b++) {
+      size_t heightBlock = getHeightBlock(a, b); // получаем от пользователя значение высоты блока
+      for (size_t c = 0; c < heightBlock; c++) {
+        map[a][b][c] = true; // заполняем значениями ячейки блока до его высоты, всё что выше не трогаем
       }
     }
     cout << endl;
   }
 }
 
-size_t getSize(size_t a, size_t b) {
-  int size {-1};
-  while (-1 == size) {
+size_t getHeightBlock(size_t a, size_t b) {
+  size_t heightBlock {HEIGHT + 1};
+  while (HEIGHT + 1 == heightBlock) {
     cout << "Введите высоту блока [" << a << "][" << b << "] = ";
-    cin >> size;
-    if (size < 0 || size > height) {
-      size = -1;
+    cin >> heightBlock;
+    if (heightBlock > HEIGHT) {
+      heightBlock = HEIGHT + 1;
       cout << "[ERROR] Введено некорректное значение высоты блока" << endl;
     }
   }
-  return static_cast<size_t>(size);
+  return heightBlock;
 }
 
-void showSlice(vector<vector<vector<bool>>> &map, size_t level) {
-  for (size_t a = 0; a < length; a++) {
-    for (size_t b = 0; b < width; b++) {
+void showSlice(Map &map, size_t level) {
+  for (size_t a = 0; a < LENGTH; a++) {
+    for (size_t b = 0; b < WIDTH; b++) {
       cout << map[a][b][level];
     }
     cout << endl;
