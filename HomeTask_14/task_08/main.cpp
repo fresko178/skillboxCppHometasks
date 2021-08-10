@@ -19,11 +19,11 @@ int main() {
   cout << "Задача 8. Почти-Майнкрафт" << endl;
   Map map(LENGTH, vector<vector<bool>>(WIDTH, vector<bool>(HEIGHT, false))); // наш куб
   setMap(map); // устанавливаем в true ячейки столбцов, кроме ячеек превышающих значение высоты
-  size_t level (SIZE_MAX);
+  size_t level {SIZE_MAX};
   while (SIZE_MAX == level) {
     cout << "Введите номер уровня среза (0-9): ";
     cin >> level;
-    if (level < 0 || level > HEIGHT - 1) {
+    if (level > HEIGHT - 1) {
       level = SIZE_MAX;
       cout << "[ERROR] Введён несуществующий уровень, повторите попытку" << endl;
     }
