@@ -28,13 +28,22 @@ void Play(const Melody &melody) {
   for(size_t i {0}; i < SIZE; i++) {
     cout << i + 1 << ") ";
     for (size_t j {0}; j < melody[i].length(); j++) {
-      if (DO == (1 << (melody[i][j] - 48 - 1))) { cout << "DO "; }
-      if (RE == (1 << (melody[i][j] - 48 - 1))) { cout << "RE "; }
-      if (MI == (1 << (melody[i][j] - 48 - 1))) { cout << "MI "; }
-      if (FA == (1 << (melody[i][j] - 48 - 1))) { cout << "FA "; }
-      if (SOL == (1 << (melody[i][j] - 48 - 1))) { cout << "SOL "; }
-      if (LA == (1 << (melody[i][j] - 48 - 1))) { cout << "LA "; }
-      if (SI == (1 << (melody[i][j] - 48 - 1))) { cout << "SI "; }
+      switch (1 << (melody[i][j] - '0' - 1)) { // определяем цифру
+        case DO: cout << "DO ";
+          break;
+        case RE: cout << "RE ";
+          break;
+        case MI: cout << "MI ";
+          break;
+        case FA: cout << "FA ";
+          break;
+        case SOL: cout << "SOL ";
+          break;
+        case LA: cout << "LA ";
+          break;
+        case SI: cout << "SI ";
+          break;
+      }
     }
     cout << endl;
   }
