@@ -7,7 +7,7 @@ using std::endl;
 bool isSubstring(char *, char *);
 
 int main() {
-  cout << "Задача 2." << endl << endl;
+  cout << "Задача 3." << endl << endl;
   char s1[] {"text1"};
   char s2[] {"ex"};
   char s3[] {"t1"};
