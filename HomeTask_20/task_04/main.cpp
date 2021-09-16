@@ -18,6 +18,7 @@ Bank getStatusBank();
 void Initialisation();
 size_t getAmountBanknotes(Bank &, Bank &, size_t, size_t);
 bool checkBankSum(Bank &, size_t);
+void saveToFile(Bank &);
 
 int main() {
   cout << "Задание 4. Реализация симуляции банкомата" << endl << endl;
@@ -33,7 +34,6 @@ int main() {
     }
     else if (operation == '-') {
       getMoney(bank);
-      getStatusBank();
     }
   }
 
@@ -45,38 +45,27 @@ void Initialisation() {
   std::ifstream fileATM("atm.bin", std::ios::binary);
   if (!fileATM.is_open()) {
     std::ofstream file("atm.bin", std::ios::binary);
-    if (file.is_open()) {
-      size_t var {0};
-      for (int i = 0; i < 6; i++) {
-        file.write((char*)&var, sizeof (size_t));
-      }
-      file.close();
-    } else {
-      cout << "[ОШИБКА] Не удалось создать автономный файл для хранения состояния банкомата" << endl;
-      exit(EXIT_FAILURE);
-    }
+    file.close();
   } else {
     fileATM.close();
   }
 }
 
 Bank getStatusBank() {
-  Bank bank = {{0, 100}, {0, 200}, {0, 500}, {0, 1000}, {0, 2000}, {0, 5000}}; // счётчики купюр
+  Bank bank {{0, 100}, {0, 200}, {0, 500}, {0, 1000}, {0, 2000}, {0, 5000}}; // счётчики купюр
   std::ifstream fileATM("atm.bin", std::ios::binary);
   size_t count {0}; // счётчик банкнот
   if (fileATM.is_open()) {
-    for (size_t i {0}; i < 6; i++) {
-      fileATM.read((char*)&bank[i][0], sizeof(size_t));
-      count += bank[i][0]; // считаем кол. банкнот
-    }
-    cout << endl <<"[СТАТУС] в банкомате " << count << " банкнот" << endl;
-    for (size_t codeBanknote {0}; codeBanknote < 6; codeBanknote++) {
-      cout << "кол. банкнот " << bank[codeBanknote][1] << " = " << bank[codeBanknote][0] << endl;
-    }
+    fileATM.read((char*)&bank[0][0], (bank.size()+1) * sizeof(bank[0]));
     fileATM.close();
   } else {
     cout << "[ОШИБКА] Не удалось открыть файл для чтения" << endl;
     exit(EXIT_FAILURE);
+  }
+  count = bank[0][0] + bank[1][0] + bank[2][0] + bank[3][0] + bank[4][0] + bank[5][0]; // считаем кол. банкнот
+  cout << endl <<"[СТАТУС] в банкомате " << count << " банкнот" << endl;
+  for (size_t codeBanknote {0}; codeBanknote < 6; codeBanknote++) {
+    cout << "кол. банкнот " << bank[codeBanknote][1] << " = " << bank[codeBanknote][0] << endl;
   }
   return bank;
 }
@@ -93,29 +82,21 @@ void refill(Bank &bank) {
     bank[codeBanknote][0]++; // заполняем банкомат
     count++;
   }
-  std::ofstream fileATM("atm.bin", std::ios::binary);
-  if (fileATM.is_open()) {
-    for (size_t i {0}; i < 6; i++) {
-      fileATM.write((char*)&bank[i][0], sizeof(size_t)); // сохраняем состояние банкомата
-    }
-    fileATM.close();
-  } else {
-    cout << "[ОШИБКА] Не удалось открыть файл для записи" << endl;
-    exit(EXIT_FAILURE);
-  }
+  saveToFile(bank);
 }
 
 void getMoney(Bank &bank) {
   cout << "Введите сумму снятия: ";
   size_t sum {0};
   cin >> sum;
-  Bank user = {{0, 100}, {0, 200}, {0, 500}, {0, 1000}, {0, 2000}, {0, 5000}}; // каких банкнот и сколько будет выдано
+  Bank user {{0, 100}, {0, 200}, {0, 500}, {0, 1000}, {0, 2000}, {0, 5000}}; // каких банкнот и сколько будет выдано
   if (checkBankSum(bank, sum)) { // хватаетли денег в банкомате
     if (sum % 100 == 0) { // сумма кратна ста
       cout << "Выдано: " << endl;
       for (size_t codeBanknote {0}; codeBanknote < 6; codeBanknote++) {
         sum = getAmountBanknotes(bank, user, sum, 5 - codeBanknote);
       }
+      saveToFile(bank);
       size_t countBanknotes {0}; // кол. выданных банкнот
       for (size_t codeBanknote {0}; codeBanknote < 6; codeBanknote++) {
         if (user[codeBanknote][0] > 0) {
@@ -126,16 +107,6 @@ void getMoney(Bank &bank) {
       if (countBanknotes == 0) {
         cout << "банкнот " << countBanknotes << endl;
         cout << "В банкомате нет банкнот соответствующего достоинства" << endl;
-      }
-      std::ofstream fileATM("atm.bin", std::ios::binary); // обнавляем состояние банкомата
-      if (fileATM.is_open()) {
-        for (size_t i {0}; i < 6; i++) {
-          fileATM.write((char*)&bank[i][0], sizeof(size_t));
-        }
-        fileATM.close();
-      } else {
-        cout << "[ОШИБКА] Не удалось открыть файл для записи" << endl;
-        exit(EXIT_FAILURE);
       }
     } else {
       cout << "[ОШИБКА] Банкомат выдаёт только суммы кратные ста" << endl;
@@ -170,5 +141,16 @@ bool checkBankSum(Bank &bank, size_t sum) {
   if (sumBank >= sum) { return true;} // денег хватает
 
   return false; // денег не хватает
+}
+
+void saveToFile(Bank &bank) {
+  std::ofstream fileATM("atm.bin", std::ios::binary);
+  if (fileATM.is_open()) {
+    fileATM.write((char*)&bank[0][0], (bank.size()+1) * sizeof(bank[0])); // сохраняем состояние банкомата
+    fileATM.close();
+  } else {
+    cout << "[ОШИБКА] Не удалось открыть файл для записи" << endl;
+    exit(EXIT_FAILURE);
+  }
 }
 
