@@ -1,0 +1,6 @@
+cmake_minimum_required(VERSION 2.8)
+project(myproj)
+set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++1z -Wall")
+set (SOURCES main.cpp)
+set (HEADERS header.h)
+add_executable (${PROJECT_NAME} ${SOURCES} ${HEADERS})
