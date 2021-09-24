@@ -27,6 +27,7 @@ int main() {
   coordinateGeneration(persons[5]); // генерируем случайные координаты герою
   separation(persons); // герой не должен вначале игры попадать на врагов
 
+
   cout << endl;
   Map map(SIZE, std::vector<char>(SIZE, FILLER));
   characterPlacement(map, persons); // размещаем персонажей
@@ -183,11 +184,17 @@ void separation (Persons &persons) {
 }
 
 void saveGame(Persons &persons) {
-  std::ofstream file("save.txt");
+  std::ofstream file("save.bin", std::ios::binary);
   if (file.is_open()) {
     for(auto p : persons) {
-      file << p.name << endl << p.health << endl << p.armor << endl << p.damage << endl << p.image << endl
-           << p.coordinates.x << endl << p.coordinates.y << endl;
+      size_t len = p.name.length();
+      file.write((char*)&len, sizeof(len));
+      file.write(p.name.c_str(), len);
+      file.write((char*)&p.health, sizeof(p.health));
+      file.write((char*)&p.armor, sizeof(p.armor));
+      file.write((char*)&p.damage, sizeof(p.damage));
+      file.write(&p.image, sizeof(p.image));
+      file.write((char*)&p.coordinates, sizeof(p.coordinates));
     }
     file.close();
   } else {
@@ -196,25 +203,24 @@ void saveGame(Persons &persons) {
 }
 
 void loadGame(Map &map, Persons &persons) {
-  std::ifstream file("save.txt");
-   if (file.is_open()) {
-     std::string str {""};
-     for (size_t i {0}; i < persons.size(); i++) {
-       std::getline(file, persons[i].name);
-       file >> str;
-       persons[i].health = std::stoi(str);
-       file >> str;
-       persons[i].armor =  std::stoi(str);
-       file >> str;
-       persons[i].damage =  std::stoi(str);
-       file >> str;
-       persons[i].image =  str[0];
-       file >> str;
-       persons[i].coordinates.x =  std::stoul(str);
-       file >> str;
-       persons[i].coordinates.y =  std::stoul(str);
-       std::getline(file, str);
-     }
+  std::ifstream file("save.bin", std::ios::binary);
+    if (file.is_open()) {
+      size_t i {0};
+      size_t len {0};
+      while(file.good()) {
+        len = 0;
+        file.read((char*)&len, sizeof (len));
+        if (len != 0) {
+          persons[i].name.resize(len);
+          file.read((char*)persons[i].name.c_str(), len);
+          file.read((char*)&persons[i].health, sizeof(persons[i].health));
+          file.read((char*)&persons[i].armor, sizeof(persons[i].armor));
+          file.read((char*)&persons[i].damage, sizeof(persons[i].damage));
+          file.read(&persons[i].image, sizeof(persons[i].image));
+          file.read((char*)&persons[i].coordinates, sizeof(persons[i].coordinates));
+          i++;
+        }
+      }
      file.close();
      for (size_t i {0}; i < SIZE; i++) {
        for (size_t j {0}; j < SIZE; j++) {
