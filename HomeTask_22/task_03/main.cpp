@@ -39,7 +39,11 @@ bool isAnagramma(const std::string_view &str1, const std::string_view &str2) {
 
 void addToMap(Word &word, const std::string_view &str) {
   for (char c : str) {
-    word[c];
+    if (word.find(c) != word.end()) { // найден элемент
+      word[c]++; // увеличиваем счётчик одинаковых символов
+    } else {
+      word.insert(std::make_pair(c, 1)); // добавляем новый элемент
+    }
   }
 }
 
