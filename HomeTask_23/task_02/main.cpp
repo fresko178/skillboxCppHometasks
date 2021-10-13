@@ -1,11 +1,5 @@
 #include <iostream>
 
-constexpr int SIZE {10};
-
-using std::cout;
-using std::cin;
-using std::endl;
-
 #define GETPASSENGERS(wagons) \
   for (int i {0}; i < SIZE; i++) { \
     cout << "Введите число пассажиров " << "вагон " << i + 1 << ": "<< endl; \
@@ -33,8 +27,14 @@ using std::endl;
   } \
   cout << "Общее кол. пассажиров " << sum << endl;
 
+constexpr int SIZE {10};
+
+using std::cout;
+using std::cin;
+using std::endl;
 
 int main() {
+  cout << "Задание 2. Анализ заполненности вагонов в поезде" << endl;
   int wagons[SIZE];
   GETPASSENGERS(wagons);
   OVERFLOW(wagons);
