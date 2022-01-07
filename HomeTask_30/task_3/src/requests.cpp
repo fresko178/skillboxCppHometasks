@@ -40,7 +40,7 @@ void Requests::post() {
     if (i + 1 < argval.size ()) (arguments += " ");
   }
 
-  cpr::Response r = cpr::Post(cpr::Url ("http://httpbin.org/post"),
-                              cpr::Payload { {"abraCODabra", arguments} } );
+  cpr::Response r = cpr::Post(cpr::Url("http://httpbin.org/post"), cpr::Payload(argval.begin(), argval.end()));
+
   cout << r.text << endl << endl;
 }
