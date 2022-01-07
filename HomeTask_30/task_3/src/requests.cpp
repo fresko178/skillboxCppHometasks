@@ -34,12 +34,6 @@ void Requests::get() {
 }
 
 void Requests::post() {
-  string arguments = {""};
-  for (size_t i {0}; i < argval.size(); i++) {
-    arguments += argval[i].key + " " + argval[i].value;
-    if (i + 1 < argval.size ()) (arguments += " ");
-  }
-
   cpr::Response r = cpr::Post(cpr::Url("http://httpbin.org/post"), cpr::Payload(argval.begin(), argval.end()));
 
   cout << r.text << endl << endl;
