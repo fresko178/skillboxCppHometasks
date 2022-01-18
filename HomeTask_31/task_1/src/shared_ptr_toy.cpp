@@ -13,7 +13,8 @@ Shared_ptr_toy::Shared_ptr_toy(const Shared_ptr_toy &toy) : obj(toy.obj), count(
 }
 
 Shared_ptr_toy::~Shared_ptr_toy() { // деструктор
-  if ((*count - 1) == 0) {
+  *count -= 1;
+  if (*count == 0) {
     cout << "(destructor) delete " << obj->getName() << endl;
     delete obj;
     delete count;
