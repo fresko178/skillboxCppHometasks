@@ -22,12 +22,14 @@ Shared_ptr_toy::~Shared_ptr_toy() { // деструктор
 }
 
 Shared_ptr_toy& Shared_ptr_toy::operator = (const Shared_ptr_toy &other) { // оператор присваивания
-  if (count != other.count && (*count - 1) == 0) {
-    *count -= 1;
-    if (obj == nullptr) { cout << "delete Nothing" << endl; }
-    else { cout << "delete " << obj->getName() << endl; }
-    delete obj;
-    delete count;
+  if (count != other.count) {  // не местный
+    if (*count - 1 == 0) { // время умирать?
+      *count -= 1;
+      if (obj == nullptr) { cout << "delete Nothing" << endl; }
+      else { cout << "delete " << obj->getName() << endl; }
+      delete obj;
+      delete count;
+    }
     obj = other.obj;
     *count = *other.count + 1;
   }
