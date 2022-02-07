@@ -16,23 +16,23 @@ int main()
   std::ifstream in("Films.json");
   in >> films;
 
-  for (nlohmann::json::iterator it = films.begin(); it != films.end(); it++) {
-    cout << *it.value().items().iteration_proxy::begin().value() << endl;
-  }
+//std::string nameActor = "Костя";
+  std::string nameActor = "Димон";
 
-
-  std::string s {"Димон"};
-  for (auto &x1 : films.items()) {
-    nlohmann::json f1 = x1.value();
-
-    if (x1.value().find("characters").value().find("Колобок").value().find("actor").value().find("name").value() == s)
+  for (auto it = films.begin(); it != films.end(); it++) {
+    nlohmann::json &cast = it.value()["characters"];
+    for (auto jt = cast.begin(); jt != cast.end(); jt++)
     {
-
+      auto str = to_string(jt.value());
+// поиска актёра по имени, вывод в консоль названий кинолент, в которых снималься актёр и роль которую он исполнял
+      if (str.find(nameActor) != std::string::npos) // актёр найден
+      {
+        cout << nameActor << " in " << it.key() << " as " << jt.key() << endl;
+      }
     }
   }
 
   in.close();
-
   std::cout << "program close" << std::endl;
   return 0;
 }
@@ -93,4 +93,13 @@ void createJSON()
   out.close();
 }
 
+//  dict = "{ \"date\": \"01.01.1970\" }"_json;
+//  dict = nlohmann::json::parse("{ \"studio\": \"Мёртвый страус\" }");
+// можно и так
+//  nlohmann::json dict =
+//  {
+//    {"name", record.name},
+//    {"age",  record.age},
+//    {"married", record.married}
+//  };
 
