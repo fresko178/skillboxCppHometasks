@@ -9,6 +9,6 @@ _This_ _software_ _can_ _serve_ _as_ _a_ _search_ _system_ _on_ _the_ _company's
  gcc 10.2.1
 ---
 ### Compiling
- cmake CMakeLists.txt
- make
+- cmake CMakeLists.txt
+- make
 
