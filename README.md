@@ -30,4 +30,3 @@ Compiling
 ----------
 - cmake CMakeLists.txt
 - make
-
