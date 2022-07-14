@@ -2,12 +2,17 @@
 #include <thread>
 #include <string>
 #include <set>
+#include <mutex>
+
+std::mutex access;
 
 void InvertedIndex::UpdateDocumentBase(std::vector<std::string> input_docs)
 {
+  access.lock();
   docs = input_docs;
   std::vector<std::thread> list_th;
   for (std::string str : docs) { //  выделяем слова из строки
+  access.unlock();
     list_th.push_back(std::thread([&, str](){
       std::set<std::string> unique_words; // список уникальных слов
       unique_words.clear();
